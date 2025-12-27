@@ -7,5 +7,6 @@
 # Learn more: https://codecrafters.io/program-interface
 
 set -e # Exit on failure
+uv sync
 
 # (This file is empty since Python programs don't use a compile step)

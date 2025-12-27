@@ -1,5 +1,59 @@
 [project]
 name = "codecrafters-git"
 version = "0.1.0"
-requires-python = ">=3.14"
-dependencies = []
+requires-python = ">=3.13"
+dependencies = ["typer>=0.21.0"]
+
+[dependency-groups]
+dev = ["ruff>=0.14.10", "ty>=0.0.7"]
+
+
+[tool.ruff]
+target-version = "py313"
+line-length = 120
+
+[tool.ruff.format]
+docstring-code-format = true
+preview = true
+skip-magic-trailing-comma = false
+
+[tool.ruff.lint]
+# The commented rule codes should be enabled in future pull requests.
+# Please check: https://docs.astral.sh/ruff/rules/
+select = [
+    "F",     # Pyflakes
+    "E",     # pycodestyle (error)
+    "W",     # pycodestyle (warning)
+    "C90",   # mccabe
+    "I",     # isort
+    "N",     # pep8-naming
+    "UP",    # pyupgrade
+    "YTT",   # flake8-2020
+    "ASYNC", # flake8-async
+    "S",     # flake8-bandit
+    "BLE",   # flake8-blind-expect
+    "B",     # flake8-bugbear
+    "A",     # flake8-builtins
+    "C4",    # flake8-comprehensions
+    "T10",   # flake8-debugger
+    "FA",    # flake8-future-annotations
+    "LOG",   # flake8-logging
+    "G",     # flake8-logging-format
+    "PIE",   # flake8-pie
+    "T20",   # flake8-print
+    "PT",    # flake8-pytest-style
+    "RSE",   # flake8-raise
+    "RET",   # flake8-return
+    "SLF",   # flake8-self
+    "SIM",   # flake8-simplify
+    "TID",   # flake8-tidy-imports
+    "ARG",   # flake8-unused-arguments
+    "PTH",   # flake8-use-pathlib
+    "PL",    # Pylint
+    "TRY",   # tryceratops
+    "NPY",   # Numpy-specific
+    "PERF",  # Perflint
+    "RUF",   # Ruff-specific
+]
+
+ignore = ["T201"]

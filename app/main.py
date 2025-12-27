@@ -1,24 +1,23 @@
-import sys
-import os
+import typer
+
+from .constants import GIT_FOLDER, GIT_HEAD_FILE, GIT_OBJECTS_FOLDER, GIT_REFS_FOLDER
+
+app = typer.Typer(no_args_is_help=True)
 
 
-def main():
-    # You can use print statements as follows for debugging, they'll be visible when running tests.
-    print("Logs from your program will appear here!", file=sys.stderr)
+@app.command(name="init")
+def git_init():
+    GIT_FOLDER.mkdir()
+    GIT_OBJECTS_FOLDER.mkdir()
+    GIT_REFS_FOLDER.mkdir()
+    GIT_HEAD_FILE.write_text("ref: refs/heads/main\n")
+    print("Initialized git directory")
 
-    # TODO: Uncomment the code below to pass the first stage
-    #
-    # command = sys.argv[1]
-    # if command == "init":
-    #     os.mkdir(".git")
-    #     os.mkdir(".git/objects")
-    #     os.mkdir(".git/refs")
-    #     with open(".git/HEAD", "w") as f:
-    #         f.write("ref: refs/heads/main\n")
-    #     print("Initialized git directory")
-    # else:
-    #     raise RuntimeError(f"Unknown command #{command}")
+
+@app.command()
+def other():
+    raise NotImplementedError
 
 
 if __name__ == "__main__":
-    main()
+    app()
