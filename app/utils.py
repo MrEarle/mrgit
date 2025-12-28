@@ -56,9 +56,9 @@ def get_decompressed_object(object_hash) -> EncodedObjectContents:
 
 @dataclass
 class ObjectBlob:
-    type: Literal["tree", "blob"]
+    type: Literal["tree", "blob", "commit"]
     content: bytes
-    path: Path
+    path: Path | None = None
 
     @cached_property
     def size(self):
@@ -73,7 +73,7 @@ class ObjectBlob:
         decoded = self.content.decode()
         decoded_size = len(decoded)
 
-        return ObjectContents(header=f"blob {decoded_size}", content=decoded)
+        return ObjectContents(header=f"{self.type} {decoded_size}", content=decoded)
 
 
 def build_file_blob(file_path: Path) -> ObjectBlob:

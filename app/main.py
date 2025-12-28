@@ -3,6 +3,7 @@ import logging
 import typer
 
 from .cat_file import git_cat_file
+from .commit_tree import git_commit_tree
 from .config import git_config
 from .git_init import git_init
 from .hash_object import git_hash_object
@@ -22,6 +23,7 @@ app.command(name="hash-object")(git_hash_object)
 app.command(name="ls-tree")(git_ls_tree)
 app.command(name="write-tree")(git_write_tree)
 app.command(name="config")(git_config)
+app.command(name="commit-tree")(git_commit_tree)
 
 
 if __name__ == "__main__":
