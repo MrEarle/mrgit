@@ -6,8 +6,7 @@ from typing import Annotated
 import typer
 
 from .constants import GIT_CONFIG_FILE
-from .objects.commit import GitCommit
-from .utils import get_decompressed_object
+from .objects import GitCommit, GitTree
 
 logger = logging.getLogger()
 
@@ -17,12 +16,12 @@ def git_commit_tree(
     message: Annotated[str, typer.Option("--message", "-m", help="Message for the commit")],
     parent_sha: Annotated[str | None, typer.Option("--parent", "-p", help="SHA1 of the parent commit")] = None,
 ):
+    # Validate tree
+    GitTree.from_object_hash(tree_sha)
 
     if parent_sha:
-        parent_object = get_decompressed_object(parent_sha)
-        if parent_object.object_type != b"tree":
-            logger.error("%s is not a tree.", parent_sha)
-            raise typer.Exit(1)
+        # Validate parent
+        GitCommit.from_object_hash(parent_sha)
 
     config = configparser.ConfigParser()
     config.read(GIT_CONFIG_FILE)

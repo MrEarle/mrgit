@@ -3,9 +3,7 @@ from typing import Annotated
 
 import typer
 
-from app.ls_tree import git_ls_tree
-
-from .utils import get_decompressed_object
+from .utils import parse_any_object
 
 logger = logging.getLogger()
 
@@ -15,14 +13,11 @@ def git_cat_file(
     pretty_print: Annotated[bool, typer.Option("--pretty-print", "-p", help="Pretty print <object> content")] = False,
     show_object_type: Annotated[bool, typer.Option("--type", "-t", help="Show object type.")] = False,
 ):
-    object_contents = get_decompressed_object(object_hash)
-    logger.info("Blob %s has header %s", object_hash, object_contents.header)
+    # TODO: Support all types
+    obj = parse_any_object(object_hash)
 
     if show_object_type:
-        print(object_contents.object_type)
+        print(obj.fmt)
 
     if pretty_print:
-        if object_contents.object_type == b"tree":
-            git_ls_tree(object_hash)
-        else:
-            print(object_contents.content.decode(), end="")
+        print(obj.get_payload())

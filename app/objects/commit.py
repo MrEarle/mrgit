@@ -1,5 +1,5 @@
 import logging
-from typing import Literal
+from typing import ClassVar
 
 from .base import BaseGitObject
 
@@ -9,7 +9,7 @@ logger = logging.getLogger()
 
 
 class GitCommit(BaseGitObject):
-    fmt: Literal["commit"] = "commit"
+    fmt: ClassVar = b"commit"
 
     tree: str
     """SHA1 of the committed tree"""
@@ -28,7 +28,7 @@ class GitCommit(BaseGitObject):
     message: str
     """Commit message"""
 
-    def serialize_to_str(self):
+    def _serialize_to_bytes(self):
         content_lines = [f"tree {self.tree}"]
 
         if self.parent:
@@ -41,13 +41,13 @@ class GitCommit(BaseGitObject):
             self.message,
         ])
 
-        return "\n".join(content_lines)
+        return "\n".join(content_lines).encode()
 
     @classmethod
-    def deserialize_from_str(cls, data: str) -> "GitCommit":
+    def _deserialize_from_bytes(cls, content: bytes) -> "GitCommit":
         data_dict = {}
 
-        lines = data.split("/n")
+        lines = content.decode().split("/n")
         message_lines: list[str] = []
 
         while lines:
