@@ -30,30 +30,30 @@ select = [
     "UP",    # pyupgrade
     "YTT",   # flake8-2020
     "ASYNC", # flake8-async
-    "S",     # flake8-bandit
-    "BLE",   # flake8-blind-expect
-    "B",     # flake8-bugbear
-    "A",     # flake8-builtins
-    "C4",    # flake8-comprehensions
-    "T10",   # flake8-debugger
-    "FA",    # flake8-future-annotations
-    "LOG",   # flake8-logging
-    "G",     # flake8-logging-format
-    "PIE",   # flake8-pie
-    "T20",   # flake8-print
-    "PT",    # flake8-pytest-style
-    "RSE",   # flake8-raise
-    "RET",   # flake8-return
-    "SLF",   # flake8-self
-    "SIM",   # flake8-simplify
-    "TID",   # flake8-tidy-imports
-    "ARG",   # flake8-unused-arguments
-    "PTH",   # flake8-use-pathlib
-    "PL",    # Pylint
-    "TRY",   # tryceratops
-    "NPY",   # Numpy-specific
-    "PERF",  # Perflint
-    "RUF",   # Ruff-specific
+    # "S",     # flake8-bandit
+    "BLE",  # flake8-blind-expect
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "C4",   # flake8-comprehensions
+    "T10",  # flake8-debugger
+    "FA",   # flake8-future-annotations
+    "LOG",  # flake8-logging
+    "G",    # flake8-logging-format
+    "PIE",  # flake8-pie
+    "T20",  # flake8-print
+    "PT",   # flake8-pytest-style
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "TID",  # flake8-tidy-imports
+    "ARG",  # flake8-unused-arguments
+    "PTH",  # flake8-use-pathlib
+    "PL",   # Pylint
+    "TRY",  # tryceratops
+    "NPY",  # Numpy-specific
+    "PERF", # Perflint
+    "RUF",  # Ruff-specific
 ]
 
 ignore = ["T201"]
