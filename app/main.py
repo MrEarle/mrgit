@@ -1,6 +1,6 @@
 import typer
 
-from .constants import GIT_FOLDER, GIT_HEAD_FILE, GIT_OBJECTS_FOLDER, GIT_REFS_FOLDER
+from app.constants import GIT_FOLDER, GIT_HEAD_FILE, GIT_OBJECTS_FOLDER, GIT_REFS_FOLDER
 
 app = typer.Typer(no_args_is_help=True)
 
