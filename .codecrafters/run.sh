@@ -7,7 +7,4 @@
 # Learn more: https://codecrafters.io/program-interface
 
 set -e # Exit on failure
-ls -a
-# uv sync
-# uv pip list
 exec uv run --with typer -m app.main "$@"
