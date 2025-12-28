@@ -54,13 +54,6 @@ def get_decompressed_object(object_hash) -> EncodedObjectContents:
     return EncodedObjectContents(header=header, content=contents)
 
 
-def get_decoded_object_contents(object_hash) -> ObjectContents:
-    encoded_object = get_decompressed_object(object_hash)
-    metadata = encoded_object.header.decode()
-    contents = encoded_object.content.decode()
-    return ObjectContents(header=metadata, content=contents)
-
-
 @dataclass
 class ObjectBlob:
     type: Literal["tree", "blob"]
