@@ -7,6 +7,7 @@ from .commit_tree import git_commit_tree
 from .config import git_config
 from .git_init import git_init
 from .hash_object import git_hash_object
+from .log import git_log
 from .ls_tree import git_ls_tree
 from .update_ref import git_update_ref
 from .write_tree import git_write_tree
@@ -26,6 +27,7 @@ app.command(name="write-tree")(git_write_tree)
 app.command(name="config")(git_config)
 app.command(name="commit-tree")(git_commit_tree)
 app.command(name="update-ref")(git_update_ref)
+app.command(name="log")(git_log)
 
 
 if __name__ == "__main__":

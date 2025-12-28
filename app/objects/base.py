@@ -26,7 +26,7 @@ class BaseGitObject[T: GIT_OBJECT_TYPES](BaseModel, ABC):
 
     def serialize_to_bytes(self) -> bytes:
         content = self._serialize_to_bytes()
-        return f"{self.fmt} {len(content)}".encode() + content
+        return self.fmt + f" {len(content)}".encode() + b"\0" + content
 
     @abstractmethod
     def _serialize_to_bytes(self) -> bytes: ...
@@ -45,13 +45,11 @@ class BaseGitObject[T: GIT_OBJECT_TYPES](BaseModel, ABC):
 
     @cached_property
     def file_contents_str(self) -> str:
-        content = self.serialize_to_str()
-        return f"{self.fmt} {len(content)}\0{content}"
+        return self.serialize_to_str()
 
     @cached_property
     def file_contents_bytes(self) -> bytes:
-        content = self._serialize_to_bytes()
-        return f"{self.fmt} {len(content)}\0".encode() + content
+        return self.serialize_to_bytes()
 
     @cached_property
     def blob_hash(self):

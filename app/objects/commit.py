@@ -1,4 +1,6 @@
 import logging
+from datetime import datetime
+from functools import cached_property
 from typing import ClassVar
 
 from .base import BaseGitObject
@@ -28,11 +30,28 @@ class GitCommit(BaseGitObject):
     message: str
     """Commit message"""
 
+    @cached_property
+    def author_parts(self) -> list[str]:
+        return self.author.split(" ")
+
+    @cached_property
+    def author_email(self) -> str:
+        return self.author_parts[:-2][-1].strip("<").strip(">")
+
+    @cached_property
+    def author_name(self) -> str:
+        return " ".join(self.author_parts[:-3])
+
+    @cached_property
+    def timestamp(self) -> str:
+        tstamp = self.author_parts[-2]
+        return datetime.fromtimestamp(int(tstamp)).strftime("%a %b %d %X %Y %z")
+
     def _serialize_to_bytes(self):
         content_lines = [f"tree {self.tree}"]
 
         if self.parent:
-            content_lines.append(self.parent)
+            content_lines.append(f"parent {self.parent}")
 
         content_lines.extend([
             f"author {self.author}",
@@ -47,7 +66,7 @@ class GitCommit(BaseGitObject):
     def _deserialize_from_bytes(cls, content: bytes) -> "GitCommit":
         data_dict = {}
 
-        lines = content.decode().split("/n")
+        lines = content.decode().split("\n")
         message_lines: list[str] = []
 
         while lines:
@@ -63,7 +82,22 @@ class GitCommit(BaseGitObject):
 
         data_dict["message"] = "\n".join(message_lines)
 
+        if "parent" not in data_dict:
+            data_dict["parent"] = None
+
         if set(data_dict.keys()) != _FIELDS:
             raise ValueError("Commit file doesn't have all required fields.")
 
-        return GitCommit(**dict.fromkeys(_FIELDS, data_dict))  # ty:ignore[invalid-argument-type]
+        return GitCommit(**data_dict)  # ty:ignore[invalid-argument-type]
+
+    def log_str(self) -> str:
+        lines = [
+            f"commit {self.blob_hash}",
+            f"Author {self.author_name} <{self.author_email}>",
+            f"Date: {self.timestamp}",
+            "",
+            f"    {self.message.replace('\n', '\n    ')}",
+            "",
+        ]
+
+        return "\n".join(lines)
