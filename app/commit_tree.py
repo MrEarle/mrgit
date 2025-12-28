@@ -5,9 +5,9 @@ from typing import Annotated
 
 import typer
 
-from app.constants import GIT_CONFIG_FILE
-
-from .utils import ObjectBlob, get_decompressed_object, write_hash_object
+from .constants import GIT_CONFIG_FILE
+from .objects.commit import GitCommit
+from .utils import get_decompressed_object
 
 logger = logging.getLogger()
 
@@ -17,15 +17,12 @@ def git_commit_tree(
     message: Annotated[str, typer.Option("--message", "-m", help="Message for the commit")],
     parent_sha: Annotated[str | None, typer.Option("--parent", "-p", help="SHA1 of the parent commit")] = None,
 ):
-    lines = [f"tree {tree_sha}"]
 
     if parent_sha:
         parent_object = get_decompressed_object(parent_sha)
         if parent_object.object_type != b"tree":
             logger.error("%s is not a tree.", parent_sha)
             raise typer.Exit(1)
-
-        lines.append(f"parent {parent_sha}")
 
     config = configparser.ConfigParser()
     config.read(GIT_CONFIG_FILE)
@@ -47,15 +44,8 @@ def git_commit_tree(
     seconds_since_utc_epoch = int(timestamp.astimezone(UTC).timestamp())
 
     user = f"{user_name} <{user_email}> {seconds_since_utc_epoch} {tz_offset}"
-    lines.append(f"author {user}")
-    lines.append(f"committer {user}")
-    lines.append("")
-    lines.append(message)
 
-    content = "\n".join(lines)
-    full_object = f"commit {len(content)}\0{content}"
+    commit = GitCommit(author=user, committer=user, tree=tree_sha, parent=parent_sha, message=message)
+    commit.write_object()
 
-    blob = ObjectBlob(type="commit", content=full_object.encode())
-    write_hash_object(blob)
-
-    print(blob.blob_hash)
+    print(commit.blob_hash)
