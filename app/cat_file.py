@@ -1,10 +1,9 @@
 import logging
-import zlib
 from typing import Annotated
 
 import typer
 
-from .constants import get_object_paths
+from .utils import get_decoded_object_contents
 
 logger = logging.getLogger()
 
@@ -12,17 +11,13 @@ logger = logging.getLogger()
 def git_cat_file(
     object_hash: str,
     pretty_print: Annotated[bool, typer.Option("--pretty-print", "-p", help="Pretty print <object> content")] = False,
+    show_object_type: Annotated[bool, typer.Option("--type", "-t", help="Show object type.")] = False,
 ):
-    object_paths = get_object_paths(object_hash)
-    if not object_paths.file.is_file():
-        print(f"{object_hash} is not an existing blob")
-        raise typer.Exit(1)
+    object_contents = get_decoded_object_contents(object_hash)
+    logger.info("Blob %s has header %s", object_hash, object_contents.header)
 
-    compressed_content = object_paths.file.read_bytes()
-    file_contents = zlib.decompress(compressed_content)
-    metadata, contents = file_contents.decode("utf-8").split("\0", 1)
-
-    logger.info("Blob %s has metadata %s", object_hash, metadata)
+    if show_object_type:
+        print(object_contents.object_type)
 
     if pretty_print:
-        print(contents, end="")
+        print(object_contents.content, end="")
