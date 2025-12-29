@@ -13,7 +13,7 @@ class GitRef(BaseModel):
     def from_name(name: str) -> "GitRef":
         ref_file = GIT_REFS_HEADS_FOLDER / name
         try:
-            commit_sha = ref_file.read_text()
+            commit_sha = ref_file.read_text().strip()
         except FileNotFoundError:
             commit_sha = None
 
