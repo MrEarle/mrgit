@@ -1,9 +1,10 @@
+import contextlib
 import logging
 from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from .constants import GIT_HEAD_FILE, GIT_OBJECTS_FOLDER
+from .constants import GIT_OBJECTS_FOLDER
 from .refs import GitRef
 
 logger = logging.getLogger()
@@ -28,16 +29,24 @@ class ObjectPaths:
     file: Path
 
 
-def get_head_commit_path() -> ObjectPaths:
-    branch = GIT_HEAD_FILE.read_text().strip()
-    branch_ref_path = Path(branch.split(" ")[1]).relative_to("refs/heads")
-    branch_ref = GitRef.from_name(str(branch_ref_path))
-    return get_object_paths(branch_ref.commit_sha)
+class EmptyRefError(Exception): ...
+
+
+def get_branch_commit_path(name: str) -> ObjectPaths:
+    try:
+        ref = GitRef.from_head() if name == "HEAD" else GitRef.from_name(name)
+    except FileNotFoundError:
+        raise EmptyRefError from None
+
+    if ref.commit_sha is None:
+        raise EmptyRefError
+
+    return get_object_paths(ref.commit_sha)
 
 
 def get_object_paths(object_hash: str) -> ObjectPaths:
-    if object_hash == "HEAD":
-        return get_head_commit_path()
+    with contextlib.suppress(EmptyRefError):
+        return get_branch_commit_path(object_hash)
 
     folder_path = GIT_OBJECTS_FOLDER / object_hash[:2]
     file_path = folder_path / object_hash[2:]

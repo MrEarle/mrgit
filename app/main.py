@@ -2,6 +2,7 @@ import logging
 
 import typer
 
+from .branch import git_branch
 from .cat_file import git_cat_file
 from .commit import git_commit
 from .commit_tree import git_commit_tree
@@ -30,6 +31,7 @@ app.command(name="commit-tree")(git_commit_tree)
 app.command(name="commit")(git_commit)
 app.command(name="update-ref")(git_update_ref)
 app.command(name="log")(git_log)
+app.command(name="branch")(git_branch)
 
 
 if __name__ == "__main__":
