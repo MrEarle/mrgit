@@ -26,7 +26,9 @@ def _build_blob_entry(blob_path: Path) -> tuple[TreeEntry, list[GitBlob]]:
     return TreeEntry(sha1=blob.blob_hash, name=blob_path.name, mode=mode), [blob]
 
 
-def _build_tree_entry(tree_path: Path, ignores: list[str]) -> tuple[TreeEntry, list[GitBlob | GitTree]]:
+def _build_tree_entry(
+    tree_path: Path, ignores: list[str]
+) -> tuple[TreeEntry, list[GitBlob | GitTree]]:
     if not tree_path.is_dir():
         raise typer.Exit(1)
 
@@ -64,7 +66,12 @@ def write_tree(dry_run: bool = False) -> TreeEntry:
     entry, blobs = _build_tree_entry(Path.cwd(), gitignore())
 
     for blob in blobs:
-        logger.info("%sWriting %s object with hash %s", "[Dry Run] " if dry_run else "", blob.fmt, blob.blob_hash)
+        logger.info(
+            "%sWriting %s object with hash %s",
+            "[Dry Run] " if dry_run else "",
+            blob.fmt,
+            blob.blob_hash,
+        )
         if not dry_run:
             blob.write_object()
 
@@ -72,7 +79,9 @@ def write_tree(dry_run: bool = False) -> TreeEntry:
 
 
 def git_write_tree(
-    dry_run: Annotated[bool, typer.Option("--dry-run", help="Does not write anything in disk")] = False,
+    dry_run: Annotated[
+        bool, typer.Option("--dry-run", help="Does not write anything in disk")
+    ] = False,
 ):
     entry = write_tree(dry_run)
 

@@ -15,7 +15,9 @@ from .ls_tree import git_ls_tree
 from .update_ref import git_update_ref
 from .write_tree import git_write_tree
 
-logging.basicConfig(format="%(message)s", handlers=[logging.FileHandler("mrgit.log")], level=logging.DEBUG)
+logging.basicConfig(
+    format="%(message)s", handlers=[logging.FileHandler("mrgit.log")], level=logging.DEBUG
+)
 logger = logging.getLogger()
 
 

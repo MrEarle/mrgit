@@ -1,5 +1,5 @@
 # Byte-compiled / optimized / DLL files
-__pycache__/
+**/__pycache__
 *.py[cod]
 *$py.class
 
@@ -147,7 +147,7 @@ venv.bak/
 /site
 
 # mypy
-.mypy_cache/
+**/.mypy_cache/
 .dmypy.json
 dmypy.json
 
@@ -168,7 +168,7 @@ cython_debug/
 .idea/
 
 # Ruff stuff:
-.ruff_cache/
+**/.ruff_cache/
 
 # PyPI configuration file
 .pypirc

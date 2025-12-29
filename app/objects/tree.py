@@ -1,3 +1,4 @@
+from pathlib import Path
 from typing import ClassVar, Literal
 
 from pydantic import BaseModel, Field
@@ -55,3 +56,19 @@ class GitTree(BaseGitObject):
 
     def get_payload(self, name_only=False) -> str:
         return "\n".join(entry.to_str_representation(name_only) for entry in self.entries)
+
+    def get_paths_shas(self) -> dict[Path, TreeEntry]:
+        path_shas: dict[Path, TreeEntry] = {}
+
+        for entry in self.entries:
+            path = Path(entry.name)
+            path_shas[path] = entry
+
+            if entry.type == "tree":
+                subpath_shas = {
+                    (path / p): s
+                    for p, s in GitTree.from_object_hash(entry.sha1).get_paths_shas().items()
+                }
+                path_shas.update(subpath_shas)
+
+        return path_shas

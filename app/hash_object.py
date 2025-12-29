@@ -12,7 +12,9 @@ logger = logging.getLogger()
 
 def git_hash_object(
     file: str,
-    write: Annotated[bool, typer.Option("--write", "-w", help=f"Write <object> to {GIT_OBJECTS_FOLDER}")] = False,
+    write: Annotated[
+        bool, typer.Option("--write", "-w", help=f"Write <object> to {GIT_OBJECTS_FOLDER}")
+    ] = False,
 ):
     blob = GitBlob.build_from_file(Path(file))
 
