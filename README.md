@@ -19,3 +19,5 @@ Run:
 ```bash
 ./mrgit.sh --help
 ```
+
+If you want access to the more lower level commands, like `write-tree` or `cat-file`, set the environment variable `MRGIT_COMPLEX_MODE` to `"true"`.
