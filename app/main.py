@@ -49,7 +49,6 @@ app.command(
 app.command(
     name="branch",
     help="Creates a new branch that points to the commit in the current HEAD.",
-    no_args_is_help=True,
 )(git_branch)
 
 app.command(
