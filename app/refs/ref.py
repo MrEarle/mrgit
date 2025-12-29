@@ -12,7 +12,10 @@ class GitRef(BaseModel):
     @staticmethod
     def from_name(name: str) -> "GitRef":
         ref_file = GIT_REFS_HEADS_FOLDER / name
-        commit_sha = ref_file.read_text()
+        try:
+            commit_sha = ref_file.read_text()
+        except FileNotFoundError:
+            commit_sha = None
 
         return GitRef(name=name, commit_sha=commit_sha)
 
@@ -20,10 +23,7 @@ class GitRef(BaseModel):
     def from_head() -> "GitRef":
         branch_ref = GIT_HEAD_FILE.read_text().strip()
         branch = branch_ref.removeprefix("ref: refs/heads/")
-        try:
-            return GitRef.from_name(branch)
-        except FileNotFoundError:
-            return GitRef(name=branch, commit_sha=None)
+        return GitRef.from_name(branch)
 
     def write_to_file(self):
         from app.objects import GitCommit  # noqa: PLC0415

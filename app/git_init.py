@@ -14,5 +14,5 @@ def git_init():
     GIT_REFS_FOLDER.mkdir()
     GIT_REFS_HEADS_FOLDER.mkdir()
     GIT_REFS_TAGS_FOLDER.mkdir()
-    GIT_HEAD_FILE.write_text("ref: refs/heads/main\n")
+    GIT_HEAD_FILE.write_text("ref: refs/heads/main")
     print("Initialized git directory")

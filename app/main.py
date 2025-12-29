@@ -4,6 +4,7 @@ import typer
 
 from .branch import git_branch
 from .cat_file import git_cat_file
+from .checkout import git_checkout
 from .commit import git_commit
 from .commit_tree import git_commit_tree
 from .config import git_config
@@ -32,6 +33,7 @@ app.command(name="commit")(git_commit)
 app.command(name="update-ref")(git_update_ref)
 app.command(name="log")(git_log)
 app.command(name="branch")(git_branch)
+app.command(name="checkout")(git_checkout)
 
 
 if __name__ == "__main__":

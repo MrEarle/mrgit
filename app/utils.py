@@ -33,10 +33,7 @@ class EmptyRefError(Exception): ...
 
 
 def get_branch_commit_path(name: str) -> ObjectPaths:
-    try:
-        ref = GitRef.from_head() if name == "HEAD" else GitRef.from_name(name)
-    except FileNotFoundError:
-        raise EmptyRefError from None
+    ref = GitRef.from_head() if name == "HEAD" else GitRef.from_name(name)
 
     if ref.commit_sha is None:
         raise EmptyRefError
