@@ -3,6 +3,8 @@ from datetime import datetime
 from functools import cached_property
 from typing import ClassVar
 
+from rich.text import Text
+
 from .base import BaseGitObject
 
 _FIELDS = {"tree", "parent", "author", "committer", "message"}
@@ -90,14 +92,12 @@ class GitCommit(BaseGitObject):
 
         return GitCommit(**data_dict)  # ty:ignore[invalid-argument-type]
 
-    def log_str(self) -> str:
-        lines = [
-            f"commit {self.blob_hash}",
-            f"Author {self.author_name} <{self.author_email}>",
-            f"Date: {self.timestamp}",
-            "",
-            f"    {self.message.replace('\n', '\n    ')}",
-            "",
-        ]
-
-        return "\n".join(lines)
+    def log_str(self) -> Text:
+        return Text.assemble(
+            (f"commit {self.blob_hash}\n", "bold yellow"),
+            f"Author {self.author_name} <{self.author_email}>\n",
+            f"Date: {self.timestamp}\n",
+            "\n",
+            f"    {self.message.replace('\n', '\n    ')}\n",
+            "\n",
+        )

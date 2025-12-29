@@ -25,7 +25,7 @@ def all_paths_in_dir(directory: Path, ignores: list[str]):
     return paths
 
 
-def change_worktree(target_ref_name: str, dry_run=False):
+def change_worktree(target_ref_name: str, dry_run=False):  # noqa: C901
     current_ref = GitRef.from_head()
     if current_ref.commit_sha is None:
         raise ValueError("No commits")
