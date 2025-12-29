@@ -11,11 +11,7 @@ from .objects import GitCommit, GitTree
 logger = logging.getLogger()
 
 
-def git_commit_tree(
-    tree_sha: Annotated[str, typer.Argument(help="SHA1 of the tree to commit")],
-    message: Annotated[str, typer.Option("--message", "-m", help="Message for the commit")],
-    parent_sha: Annotated[str | None, typer.Option("--parent", "-p", help="SHA1 of the parent commit")] = None,
-):
+def commit_tree(tree_sha: str, message: str, parent_sha: str | None) -> GitCommit:
     # Validate tree
     GitTree.from_object_hash(tree_sha)
 
@@ -47,4 +43,13 @@ def git_commit_tree(
     commit = GitCommit(author=user, committer=user, tree=tree_sha, parent=parent_sha, message=message)
     commit.write_object()
 
+    return commit
+
+
+def git_commit_tree(
+    tree_sha: Annotated[str, typer.Argument(help="SHA1 of the tree to commit")],
+    message: Annotated[str, typer.Option("--message", "-m", help="Message for the commit")],
+    parent_sha: Annotated[str | None, typer.Option("--parent", "-p", help="SHA1 of the parent commit")] = None,
+):
+    commit = commit_tree(tree_sha, message, parent_sha)
     print(commit.blob_hash)

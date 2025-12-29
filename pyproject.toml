@@ -2,10 +2,10 @@
 name = "codecrafters-git"
 version = "0.1.0"
 requires-python = ">=3.13"
-dependencies = [
-    "pydantic>=2.12.5",
-    "typer>=0.21.0",
-]
+dependencies = ["pydantic>=2.12.5", "typer>=0.21.0"]
+
+[project.scripts]
+mrgit = "app.main:app"
 
 [dependency-groups]
 dev = ["ruff>=0.14.10", "ty>=0.0.7"]

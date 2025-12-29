@@ -1,8 +1,10 @@
 import logging
+from dataclasses import dataclass
 from functools import cache
 from pathlib import Path
 
-from .objects import BaseGitObject, GitBlob, GitCommit, GitTree
+from .constants import GIT_HEAD_FILE, GIT_OBJECTS_FOLDER
+from .refs import GitRef
 
 logger = logging.getLogger()
 
@@ -20,16 +22,23 @@ def gitignore() -> list[str]:
     return ignores
 
 
-def parse_any_object(sha1: str) -> BaseGitObject:
-    data = BaseGitObject.get_decompressed_data_from_hash(sha1)
-    fmt, _ = data.split(b" ", maxsplit=1)
+@dataclass
+class ObjectPaths:
+    folder: Path
+    file: Path
 
-    match fmt:
-        case b"tree":
-            return GitTree.deserialize_from_bytes(data)
-        case b"commit":
-            return GitCommit.deserialize_from_bytes(data)
-        case b"blob":
-            return GitBlob.deserialize_from_bytes(data)
-        case _:
-            raise ValueError(f"Type {fmt} not supported")
+
+def get_head_commit_path() -> ObjectPaths:
+    branch = GIT_HEAD_FILE.read_text().strip()
+    branch_ref_path = Path(branch.split(" ")[1]).relative_to("refs/heads")
+    branch_ref = GitRef.from_name(str(branch_ref_path))
+    return get_object_paths(branch_ref.commit_sha)
+
+
+def get_object_paths(object_hash: str) -> ObjectPaths:
+    if object_hash == "HEAD":
+        return get_head_commit_path()
+
+    folder_path = GIT_OBJECTS_FOLDER / object_hash[:2]
+    file_path = folder_path / object_hash[2:]
+    return ObjectPaths(folder=folder_path, file=file_path)

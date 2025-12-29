@@ -7,7 +7,7 @@ from typing import ClassVar, Literal, Self
 
 from pydantic import BaseModel
 
-from app.constants import get_object_paths
+from app.utils import get_object_paths
 
 GIT_OBJECT_TYPES = Literal[b"commit", b"blob", b"tree"]
 

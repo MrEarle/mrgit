@@ -3,7 +3,7 @@ from typing import Annotated
 
 import typer
 
-from .utils import parse_any_object
+from .objects import parse_any_object
 
 logger = logging.getLogger()
 
@@ -13,7 +13,6 @@ def git_cat_file(
     pretty_print: Annotated[bool, typer.Option("--pretty-print", "-p", help="Pretty print <object> content")] = False,
     show_object_type: Annotated[bool, typer.Option("--type", "-t", help="Show object type.")] = False,
 ):
-    # TODO: Support all types
     obj = parse_any_object(object_hash)
 
     if show_object_type:
